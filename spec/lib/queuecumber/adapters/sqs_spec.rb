@@ -72,6 +72,36 @@ module Queuecumber
       end
     end
 
+    describe "#cleanup!(prefix)" do
+      let(:queues)          { double "sqs queues" }
+      let(:my_prefix)       { "my prefix" }
+      let(:queue_to_delete) { double "queue to delete", url: "url" }
+      
+      before do
+        adapter.stub(sqs: sqs)
+      end
+
+      it "finds all queues with the given prefix" do
+        sqs.should_receive(:queues).and_return(queues)
+        queues.should_receive(:with_prefix).with(my_prefix).and_return([])
+        adapter.cleanup!(my_prefix)
+      end
+
+      it "deletes each matching queue" do
+        sqs.stub(queues: queues)
+        queues.stub(with_prefix: Array(queue_to_delete))
+        queue_to_delete.should_receive(:delete)
+        adapter.cleanup!(my_prefix)        
+      end
+
+      it "supresses AWS::SQS::Errors::NonExistentQueue errors raised when SQS is in an inconsistent state" do
+        sqs.stub(queues: queues)
+        queues.stub(with_prefix: Array(queue_to_delete))
+        queue_to_delete.stub(:delete).and_raise(AWS::SQS::Errors::NonExistentQueue)
+        adapter.cleanup!(my_prefix)        
+      end
+    end
+    
     describe "#find" do
       let(:queues) { double "sqs queues" }
       
@@ -115,6 +145,13 @@ module Queuecumber
       it "stringifies the data items and batch_sends them to the queue" do
         queue.should_receive(:batch_send).with(%w(1 2 3))
         adapter.populate!(data)        
+      end
+    end
+
+    describe "#empty!" do
+      it "calls #each, discarding the yielded data" do
+        adapter.should_receive(:each)
+        adapter.empty!
       end
     end
     

@@ -155,6 +155,8 @@ module Queuecumber
       end
       
       it "calls adapter#empty!, then adapter#populate! with the feature_file_indices" do
+        test_adapter.should_receive(:empty!).and_call_original
+        test_adapter.should_receive(:populate!).with([9, 10, 11]).and_call_original
         fq.setup!
         test_adapter.data.should eq feature_file_indices
       end
@@ -170,6 +172,20 @@ module Queuecumber
       it "delegates to the adapter" do
         my_adapter.should_receive(:delete!)
         fq.delete!
+      end
+    end
+
+    describe "#cleanup!" do
+      let(:my_adapter) { double "adapter" }
+      let(:my_prefix)  { "my prefix" }
+      
+      before do
+        fq.stub(adapter: my_adapter, prefix: my_prefix)
+      end
+
+      it "delegates to the adapter" do
+        my_adapter.should_receive(:cleanup!).with(my_prefix)
+        fq.cleanup!(my_prefix)
       end
     end
 

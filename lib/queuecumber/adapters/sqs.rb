@@ -7,7 +7,7 @@ module Queuecumber
     
     def initialize(name, options = {})
       @name    = name
-      @options = options
+      @options = options || {}
     end
 
     def sqs
@@ -30,6 +30,14 @@ module Queuecumber
     def queue
       @queue ||= (find || create!)
     end
+
+    def cleanup!(prefix)
+      sqs.queues.with_prefix(prefix).each do |q|
+        debug "- Deleting #{q.url}"
+        # SQS is eventually consistent: supress errors due to inconsistency
+        q.delete rescue AWS::SQS::Errors::NonExistentQueue
+      end
+    end
     
     def create!
       sqs.queues.create(name)
@@ -43,6 +51,11 @@ module Queuecumber
       data.each_slice(max_batch_size) do |batch|
         queue.batch_send(batch.map(&:to_s))
       end
+    end
+
+    # Pull all messages off the queue and discard them
+    def empty!
+      each
     end
 
     def each(&proc)

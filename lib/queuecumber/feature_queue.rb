@@ -46,6 +46,11 @@ module Queuecumber
       populate!(feature_file_indices)
     end
 
+    def cleanup!(target_prefix = nil)
+      target_prefix ||= prefix
+      adapter.cleanup!(target_prefix)
+    end
+    
     # TODO: inject Cucumber runtime/configuration object
     def feature_file_dir
       @feature_file_dir ||= options[:feature_file_dir] || (Module.const_defined?(:Rails) && Rails.root || FileUtils.pwd)
