@@ -48,10 +48,10 @@ module Queuecumber
     def find
       debug "- Finding queue '#{name}'"
       sqs.queues.named(name).tap do |q|
-        debug "- Found queue #{q.url}"
+        debug "  #{q.url}"
       end
     rescue AWS::SQS::Errors::NonExistentQueue
-        debug "- Not found"
+        debug "  not found"
       nil
     end
 
@@ -64,7 +64,7 @@ module Queuecumber
 
     # Pull all messages off the queue and discard them
     def empty!
-      each
+      each { |_| }
     end
 
     def each(&proc)
