@@ -1,4 +1,4 @@
-Queuecumber [![travis-ci](https://secure.travis-ci.org/lonelyplanet/queuecumber.png)](https://secure.travis-ci.org/lonelyplanet/queuecumber)
+Queuecumber [![travis-ci](https://travis-ci.org/lonelyplanet/queuecumber.png)](https://travis-ci.org/lonelyplanet/queuecumber)
 ==================
 
 Faster cukes!
