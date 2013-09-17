@@ -19,6 +19,7 @@ module Queuecumber
     
     def initialize(options = {})
       @options = options
+      debug
     end
 
     def env
@@ -60,6 +61,17 @@ module Queuecumber
     def feature_file_indices
       total_number_of_features = Dir["#{feature_file_dir}/**/*.feature"].count
       feature_file_indices     = (0..total_number_of_features - 1).to_a.shuffle
+    end
+
+    private
+
+    def debug
+      if ENV['QUEUECUMBER_DEBUG']
+        puts "Initialized FeatureQueue:"
+        %w(prefix name).each do |attr|
+          puts "#{attr}: #{self.send(attr)}"
+        end
+      end
     end
   end
 end

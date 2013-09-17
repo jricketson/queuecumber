@@ -40,15 +40,24 @@ module Queuecumber
     end
     
     def create!
-      sqs.queues.create(name)
+      sqs.queues.create(name).tap do |q|
+        debug "- Created queue '#{q.url}'"
+      end
     end
 
     def find
-      sqs.queues.named(name)
+      debug "- Finding queue '#{name}'"
+      sqs.queues.named(name).tap do |q|
+        debug "- Found queue #{q.url}"
+      end
+    rescue AWS::SQS::Errors::NonExistentQueue
+        debug "- Not found"
+      nil
     end
 
     def populate!(data)
-      data.each_slice(max_batch_size) do |batch|
+      debug "- Populating queue with #{data.count} messages"
+      data.each_slice(max_batch_size) do |batch|        
         queue.batch_send(batch.map(&:to_s))
       end
     end
@@ -63,6 +72,12 @@ module Queuecumber
         index = msg.body.to_i
         yield index
       end      
+    end
+
+    private
+
+    def debug(msg)
+      puts(msg) if ENV['QUEUECUMBER_DEBUG']
     end
   end
 end

@@ -7,7 +7,7 @@ module Queuecumber
   end
   
   class TestMessage
-    attr_reader :body
+    attr_reader :body, :url
     
     def initialize(body)
       @body = body
@@ -17,7 +17,7 @@ module Queuecumber
   describe SQSAdapter do
     let(:adapter) { SQSAdapter.new("name") }
     let(:sqs)     { double "sqs", as_null_object: true }
-    let(:queue)   { double "queue" }
+    let(:queue)   { double "queue", url: "url" }
 
     describe "#sqs" do
       it "returns a new AWS::SQS object initialized with all the options except :max_batch_size, :idle_timeout, and :wait_time_seconds" do
