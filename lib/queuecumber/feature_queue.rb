@@ -1,14 +1,14 @@
 require 'forwardable'
 require 'securerandom'
 
-# Wouldn't it be great to have autload_relative symmetrical with
-# require_relative?
-adapter_loadpath = File.expand_path("adapters", File.dirname(__FILE__))
-$LOAD_PATH.unshift(adapter_loadpath) unless $LOAD_PATH.include?(adapter_loadpath)
+module Queuecumber
+  # Wouldn't it be great to have autload_relative symmetrical with
+  # require_relative?
+  adapter_loadpath = File.expand_path("adapters", File.dirname(__FILE__))
+  $LOAD_PATH.unshift(adapter_loadpath) unless $LOAD_PATH.include?(adapter_loadpath)
+  
+  autoload :SQSAdapter, File.join(adapter_loadpath, "sqs")
 
-autoload :SQSAdapter, File.join(adapter_loadpath, "sqs")
-
-module Queuecumber  
   class FeatureQueue
     extend Forwardable
     
