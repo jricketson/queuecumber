@@ -1,6 +1,41 @@
-# Queuecumber
+Queuecumber [![travis-ci](https://secure.travis-ci.org/lonelyplanet/queuecumber.png)](https://secure.travis-ci.org/lonelyplanet/queuecumber)
+==================
 
-TODO: Write a gem description
+Faster cukes!
+
+Queuecumber lets you distribute your cucumber test build step over
+many servers/nodes/machines so you can run them in parallel.
+
+All it does is push references to your feature files onto a queue (AWS
+SQS by default). Each cucumber process you boot can then be configured
+to work off the queue, splitting the total run time approximately
+equally between them.
+
+## Usage
+
+1) Populate the queue
+
+     # In your Rails/project root directory:
+     
+     rake queuecumber:setup[my_queue]
+
+2) Work off the queue
+
+      # Run this in as many processes/machines as you want
+      # from your Rails/project root directory:
+      
+      QUEUECUMBER=my_queue cucumber --your --normal --cucumber config
+
+Unless the `QUEUECUMBER` environment variable is set, cucumber will
+run normally. This is probably what you want in dev.
+
+### Jenkins
+
+### parallel_tests
+
+### AWS SQS
+
+### Limitations
 
 ## Installation
 
@@ -16,9 +51,12 @@ Or install it yourself as:
 
     $ gem install queuecumber
 
-## Usage
+Then add `features/support/queuecumber.rb`:
 
-TODO: Write usage instructions here
+    Queuecumber.init(name: ENV['QUEUECUMBER'])
+
+This line is responsible for initializing a `FeatureQueue` with the
+correct name, and monkey-patching Cucumber.
 
 ## Contributing
 
@@ -27,3 +65,11 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## TODO
+
+* write documentation
+* add Jenkins master job code
+* add `parallel_test` helper
+* expose options to Rake task
+* logging/debug
