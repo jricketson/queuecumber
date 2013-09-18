@@ -8,10 +8,13 @@ Gem::Specification.new do |spec|
   spec.version       = Queuecumber::VERSION
   spec.authors       = ["dave@kapoq.com"]
   spec.email         = ["dave@kapoq.com"]
-  spec.description   = %q{Faster cucumber runs}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
+  spec.description   = %q{Quicker cucumber runs}
+  spec.summary       = %q{Queuecumber lets you distribute your cucumber test build step over
+many servers/nodes/machines so you can run them in parallel.}
+  spec.homepage      = "http://engineering.lonelyplanet.com"
   spec.license       = "MIT"
+  spec.platform      = Gem::Platform::RUBY
+  spec.required_ruby_version = ">= 1.9.3"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
