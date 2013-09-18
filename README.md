@@ -1,7 +1,7 @@
 Queuecumber [![travis-ci](https://travis-ci.org/lonelyplanet/queuecumber.png)](https://travis-ci.org/lonelyplanet/queuecumber)
 ==================
 
-Faster cukes!
+Quicker cukes!
 
 Queuecumber lets you distribute your cucumber test build step over
 many servers/nodes/machines so you can run them in parallel.
@@ -11,65 +11,140 @@ SQS by default). Each cucumber process you boot can then be configured
 to work off the queue, splitting the total run time approximately
 equally between them.
 
+The benefits of a queue are:
+
+ * you don't need to know in advance how many cucumber processes you
+   will run
+ * you don't need to maintain a store of how long each feature lasts
+   to get an (approximate) balance across processes
+
+It's simple to drop into an existing Jenkins setup.
+
 ## Usage
 
-1) Populate the queue
+1) Configure Cucumber
+
+    # in e.g. features/support/queuecumber.rb:
+
+    Queuecumber.init(name: ENV['QUEUECUMBER'])
+
+If you intend to run multiple Cucumber processes on the same machine,
+you'll probably also need to ensure DB isolation (see 'parallel_tests'
+below).
+
+2) Populate the queue
 
      # In your Rails/project root directory:
      
      rake queuecumber:setup[my_queue]
 
-2) Work off the queue
+3) Work off the queue
 
       # Run this in as many processes/machines as you want
       # from your Rails/project root directory:
       
       QUEUECUMBER=my_queue cucumber --your --normal --cucumber config
 
-Unless the `QUEUECUMBER` environment variable is set, cucumber will
+Unless the `QUEUECUMBER` environment variable is set, Cucumber will
 run normally. This is probably what you want in dev.
 
 ### Jenkins
 
 ### parallel_tests
 
+
+
 ### AWS SQS
+
+### Custom queue adapters
+
+Pull requests welcome.
+
+Alternatively, you can implement your own queue adapter locally:
+
+    # lib/queuecumber/my_adapter.rb
+
+    require 'queuecumber'
+    
+    module Queuecumber
+      class MyAdapter
+
+        def initialize(name, options = {})
+          # to implement
+        end
+
+        def name
+          # return queue name
+        end
+        
+        def empty!
+          # empty queue 
+        end
+
+        def cleanup!(prefix)
+          # delete all queues matching /^#{prefix}/
+        end
+
+        def create!
+          # create queue
+        end
+
+        def find
+          # return queue if it exists, or falsey if it does not
+        end
+
+        def each(&proc)
+          # yield feature index
+        end
+
+        def populate(feature_indices)
+          # push each feature index onto the queue
+        end
+      end
+    end
+
+To use the custom adapter:
+
+    # command-line
+
+    rake queuecumber:
+
+    # in e.g. features/support/queuecumber.rb:
+
+    require 'lib/queuecumber/my_adapter'
+    
+    if name = ENV['QUEUECUMBER']
+      my_adapter = Queuecumber::MyAdapter.new(name, some: options)
+      Queuecumber.init(name: name, adapter: my_adapter)
+    end
 
 ### Limitations
 
-## Installation
+Unfortunately Cucumber does not expose its iterator over features. So
+Queuecumber has to monkey-patch `Features#each` to yield the next feature
+from the queue.
 
-Add this line to your application's Gemfile:
+Secondly, populating the queue does not (yet) respect Cucumber
+tags/filters. All it does is glob the `features` directory to get a
+count of how many `.feature` files there are in total, and push a
+reference
 
-    gem 'queuecumber'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install queuecumber
-
-Then add `features/support/queuecumber.rb`:
-
-    Queuecumber.init(name: ENV['QUEUECUMBER'])
-
-This line is responsible for initializing a `FeatureQueue` with the
-correct name, and monkey-patching Cucumber.
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+Ideas and improvements are very welcome! I expect Cucumber 2.0 will be
+easier to work with.
 
 ## TODO
 
-* write documentation
+* expose initializer/options to Rake task
 * add Jenkins master job code
 * add `parallel_test` helper
-* expose options to Rake task
+* document options
 * logging/debug
+
+## Related projects
+
+* [test-queue](https://github.com/tmm1/test-queue)
+* [parallel_tests](https://github.com/grosser/parallel_tests)
+
+## Author
+
+[Dave Nolan](http://kapoq.com) / [lonelyplanet.com](http://www.lonelyplanet.com)
