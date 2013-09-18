@@ -27,7 +27,7 @@ module Queuecumber
     end
 
     def adapter
-      @adapter ||= options[:adapter] || SQSAdapter.new(name, options[:sqs_options])
+      @adapter ||= options[:adapter] || SQSAdapter.new(name, options[:adapter_options])
     end
 
     def prefix

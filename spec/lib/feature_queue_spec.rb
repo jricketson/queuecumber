@@ -48,15 +48,15 @@ module Queuecumber
       let(:my_adapter)  { double "adapter" }
 
       context "when options[:adapter] is not present" do
-        let(:sqs_options) { Hash.new }
+        let(:adapter_options) { Hash.new }
         
         before do
-          fq.options[:sqs_options] = sqs_options
+          fq.options[:adapter_options] = adapter_options
           fq.stub(name: name)
         end
 
-        it "defaults to new SQSAdapter initialized with the queue name and options[:sqs_options]" do
-          SQSAdapter.should_receive(:new).with(name, sqs_options).and_return(my_adapter)
+        it "defaults to new SQSAdapter initialized with the queue name and options[:adapter_options]" do
+          SQSAdapter.should_receive(:new).with(name, adapter_options).and_return(my_adapter)
           expect(fq.adapter).to eq my_adapter
         end
       end
