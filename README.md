@@ -127,7 +127,10 @@ from the queue.
 Secondly, populating the queue does not (yet) respect Cucumber
 tags/filters. All it does is glob the `features` directory to get a
 count of how many `.feature` files there are in total, and push a
-reference
+reference to each one onto the queue.
+
+That said, it does work and we have been using it successfully for
+several months.
 
 Ideas and improvements are very welcome! I expect Cucumber 2.0 will be
 easier to work with.
