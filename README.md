@@ -3,6 +3,8 @@ Queuecumber [![travis-ci](https://travis-ci.org/lonelyplanet/queuecumber.png)](h
 
 Quicker cukes!
 
+[![Code Climate](https://codeclimate.com/github/lonelyplanet/queuecumber.png)](https://codeclimate.com/github/lonelyplanet/queuecumber)
+
 Queuecumber lets you distribute your cucumber test build step over
 many servers/nodes/machines so you can run them in parallel.
 
