@@ -52,6 +52,8 @@ run normally. This is probably what you want in dev.
 
 ### Jenkins
 
+TODO
+
 ### parallel_tests
 
 Queuecumber can replace [`parallel_tests`](https://github.com/grosser/parallel_tests) in CI,
@@ -61,6 +63,17 @@ Just run `rake queuecumber:parallel` with the same options as you pass
 to `rake parallel:features`.
 
 ### AWS SQS
+
+Queuecumber uses [AWS SQS](http://aws.amazon.com/sqs/) by default,
+building on the [`aws-sdk` gem](http://docs.aws.amazon.com/AWSRubySDK/latest/).
+You'll need your own valid AWS credentials to use SQS.
+
+If you're running Queuecumber on an EC2 instance configured with a valid IAM
+profile, no extra configuration is required. `aws-sdk` will
+automatically interrogate the EC2 metadata provider for the credentials.
+
+Otherwise, for example on your local dev machine, set `AWS_ACCESS_KEY_ID` and
+`AWS_SECRET_ACCESS_KEY` ENV vars.
 
 ### Custom queue adapters
 
