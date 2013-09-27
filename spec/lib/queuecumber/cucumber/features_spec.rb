@@ -45,7 +45,7 @@ module Cucumber
           end
         end
 
-        context "when cucumber has loaded a matching feature" do
+        context "when cucumber has not loaded a matching feature" do
           before do
             queue << 1
           end
