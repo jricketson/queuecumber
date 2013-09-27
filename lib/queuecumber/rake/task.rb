@@ -17,6 +17,7 @@ unless ARGV.any? {|a| a =~ /^gems/} # Don't load anything when running the gems:
     desc "Run features off the queue in parallel with [num_cpus]"
     task :parallel, [:count, :pattern, :options] do |t, args|
       require 'parallel_tests'
+      require 'parallel_tests/qcuke/runner'
       
       count, pattern, options = ParallelTests::Tasks.parse_args(args)
       cli = ParallelTests::CLI.new.run([
