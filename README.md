@@ -1,7 +1,7 @@
 Qcuke [![travis-ci](https://travis-ci.org/lonelyplanet/queuecumber.png)](https://travis-ci.org/lonelyplanet/queuecumber)
 ==================
 
-Quicker cukes!
+Queues for quicker cukes!
 
 [![Code Climate](https://codeclimate.com/github/lonelyplanet/queuecumber.png)](https://codeclimate.com/github/lonelyplanet/queuecumber)
 
