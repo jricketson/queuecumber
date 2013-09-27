@@ -1,19 +1,7 @@
 require 'spec_helper'
 require 'queuecumber/adapters/sqs'
 
-module Queuecumber
-  class TestQueue < Array
-    def poll(*args, &blk); each(&blk); end
-  end
-  
-  class TestMessage
-    attr_reader :body, :url
-    
-    def initialize(body)
-      @body = body
-    end
-  end
-  
+module Queuecumber  
   describe SQSAdapter do
     let(:adapter) { SQSAdapter.new("name") }
     let(:sqs)     { double "sqs", as_null_object: true }

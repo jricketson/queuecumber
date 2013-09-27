@@ -3,16 +3,20 @@ require 'cucumber'
 module Cucumber
   module Ast
     class Features
+      def self.feature_queue=(fq)
+        @feature_queue = fq
+      end
+      
+      def self.feature_queue
+        @feature_queue ||= Queuecumber.instance
+      end
+      
       def count
         @features.count
       end
 
-      def feature_queue=(fq)
-        @feature_queue = fq
-      end
-
       def feature_queue
-        @feature_queue ||= Queuecumber.instance
+        self.class.feature_queue
       end
       
       #
@@ -20,11 +24,10 @@ module Cucumber
       #
       def each(&proc)
         feature_queue.each do |feature_index|
+          # If there is no matching feature, presumably it has been
+          # filtered out by cucumber tags
           if feature = @features[feature_index]
-            puts "\nRunning '#{feature.title}'"
             yield feature
-          else # presumably cucumber has filtered it out
-            puts "\nSkipped file #{feature_index}"
           end
         end
       end
