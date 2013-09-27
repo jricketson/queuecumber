@@ -54,7 +54,11 @@ run normally. This is probably what you want in dev.
 
 ### parallel_tests
 
+Queuecumber can replace [`parallel_tests`](https://github.com/grosser/parallel_tests) in CI,
+but the two can interoperate.
 
+Just run `rake queuecumber:parallel` with the same options as you pass
+to `rake parallel:features`.
 
 ### AWS SQS
 
@@ -141,7 +145,6 @@ easier to work with.
 
 * expose initializer/options to Rake task
 * add Jenkins master job code
-* add `parallel_test` helper
 * document options
 * logging/debug
 
