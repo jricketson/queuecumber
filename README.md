@@ -1,11 +1,11 @@
-Queuecumber [![travis-ci](https://travis-ci.org/lonelyplanet/queuecumber.png)](https://travis-ci.org/lonelyplanet/queuecumber)
+Qcuke [![travis-ci](https://travis-ci.org/lonelyplanet/queuecumber.png)](https://travis-ci.org/lonelyplanet/queuecumber)
 ==================
 
 Quicker cukes!
 
 [![Code Climate](https://codeclimate.com/github/lonelyplanet/queuecumber.png)](https://codeclimate.com/github/lonelyplanet/queuecumber)
 
-Queuecumber lets you distribute your cucumber test build step over
+Qcuke lets you distribute your cucumber test build step over
 many servers/nodes/machines so you can run them in parallel.
 
 All it does is push references to your feature files onto a queue (AWS
@@ -26,9 +26,9 @@ It's simple to drop into an existing Jenkins setup.
 
 1) Configure Cucumber
 
-    # in e.g. features/support/queuecumber.rb:
+    # in e.g. features/support/qcuke.rb:
 
-    Queuecumber.init(name: ENV['QUEUECUMBER'])
+    Qcuke.init(name: ENV['QCUKE'])
 
 If you intend to run multiple Cucumber processes on the same machine,
 you'll probably also need to ensure DB isolation (see 'parallel_tests'
@@ -38,16 +38,16 @@ below).
 
      # In your Rails/project root directory:
      
-     rake queuecumber:setup[my_queue]
+     rake qcuke:setup[my_queue]
 
 3) Work off the queue
 
       # Run this in as many processes/machines as you want
       # from your Rails/project root directory:
       
-      QUEUECUMBER=my_queue cucumber --your --normal --cucumber config
+      QCUKE=my_queue cucumber --your --normal --cucumber config
 
-Unless the `QUEUECUMBER` environment variable is set, Cucumber will
+Unless the `QCUKE` environment variable is set, Cucumber will
 run normally. This is probably what you want in dev.
 
 ### Jenkins
@@ -56,19 +56,19 @@ TODO
 
 ### parallel_tests
 
-Queuecumber can replace [`parallel_tests`](https://github.com/grosser/parallel_tests) in CI,
+Qcuke can replace [`parallel_tests`](https://github.com/grosser/parallel_tests) in CI,
 but the two can interoperate.
 
-Just run `rake queuecumber:parallel` with the same options as you pass
+Just run `rake qcuke:parallel` with the same options as you pass
 to `rake parallel:features`.
 
 ### AWS SQS
 
-Queuecumber uses [AWS SQS](http://aws.amazon.com/sqs/) by default,
+Qcuke uses [AWS SQS](http://aws.amazon.com/sqs/) by default,
 building on the [`aws-sdk` gem](http://docs.aws.amazon.com/AWSRubySDK/latest/).
 You'll need your own valid AWS credentials to use SQS.
 
-If you're running Queuecumber on an EC2 instance configured with a valid IAM
+If you're running Qcuke on an EC2 instance configured with a valid IAM
 profile, no extra configuration is required. `aws-sdk` will
 automatically interrogate the EC2 metadata provider for the credentials.
 
@@ -81,11 +81,11 @@ Pull requests welcome.
 
 Alternatively, you can implement your own queue adapter locally:
 
-    # lib/queuecumber/my_adapter.rb
+    # lib/qcuke/my_adapter.rb
 
-    require 'queuecumber'
+    require 'qcuke'
     
-    module Queuecumber
+    module Qcuke
       class MyAdapter
 
         def initialize(name, options = {})
@@ -126,21 +126,21 @@ To use the custom adapter:
 
     # command-line
 
-    rake queuecumber:
+    rake qcuke:
 
-    # in e.g. features/support/queuecumber.rb:
+    # in e.g. features/support/qcuke.rb:
 
-    require 'lib/queuecumber/my_adapter'
+    require 'lib/qcuke/my_adapter'
     
-    if name = ENV['QUEUECUMBER']
-      my_adapter = Queuecumber::MyAdapter.new(name, some: options)
-      Queuecumber.init(name: name, adapter: my_adapter)
+    if name = ENV['QCUKE']
+      my_adapter = Qcuke::MyAdapter.new(name, some: options)
+      Qcuke.init(name: name, adapter: my_adapter)
     end
 
 ### Limitations
 
 Unfortunately Cucumber does not expose its iterator over features. So
-Queuecumber has to monkey-patch `Features#each` to yield the next feature
+Qcuke has to monkey-patch `Features#each` to yield the next feature
 from the queue.
 
 Secondly, populating the queue does not (yet) respect Cucumber

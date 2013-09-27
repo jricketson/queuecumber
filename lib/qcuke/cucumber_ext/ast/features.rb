@@ -8,7 +8,7 @@ module Cucumber
       end
       
       def self.feature_queue
-        @feature_queue ||= Queuecumber.instance
+        @feature_queue ||= Qcuke.instance
       end
       
       def count

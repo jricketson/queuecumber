@@ -1,10 +1,10 @@
 unless ARGV.any? {|a| a =~ /^gems/} # Don't load anything when running the gems:* tasks
-  require 'queuecumber'
+  require 'qcuke'
 
-  def init(*args); Queuecumber.init(*args); end
+  def init(*args); Qcuke.init(*args); end
   
-  namespace :queuecumber do
-    desc "Delete all queues with given prefix (defaults to 'QUEUECUMBER')"
+  namespace :qcuke do
+    desc "Delete all queues with given prefix (defaults to 'QCUKE')"
     task :cleanup, [:prefix] do |_, options|
       init(options).cleanup!(options[:prefix])
     end

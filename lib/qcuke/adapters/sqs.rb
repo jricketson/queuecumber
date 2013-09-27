@@ -1,6 +1,6 @@
 require 'aws-sdk'
 
-module Queuecumber
+module Qcuke
   class SQSAdapter
     attr_reader   :name
     attr_accessor :options
@@ -77,7 +77,7 @@ module Queuecumber
     private
 
     def debug(msg)
-      puts(msg) if ENV['QUEUECUMBER_DEBUG']
+      puts(msg) if ENV['QCUKE_DEBUG']
     end
   end
 end

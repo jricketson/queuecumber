@@ -1,18 +1,18 @@
 require 'spec_helper'
-require 'queuecumber/cucumber_ext/ast/features'
+require 'qcuke/cucumber_ext/ast/features'
 
 module Cucumber
   module Ast
     describe Features do
       let(:features) { Features.new }
-      let(:queue)    { Queuecumber::TestQueue.new }
+      let(:queue)    { Qcuke::TestQueue.new }
       let(:feature)  { double "feature", title: "my feature" }
 
       describe ".feature_queue" do
         let(:instance) { double "instance" }
             
-        it "by default returns Queuecumber.instance" do
-          Queuecumber.should_receive(:instance).and_return(instance)
+        it "by default returns Qcuke.instance" do
+          Qcuke.should_receive(:instance).and_return(instance)
           expect(Features.feature_queue).to eq instance
         end
       end

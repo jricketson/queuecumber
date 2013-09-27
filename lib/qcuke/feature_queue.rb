@@ -1,7 +1,7 @@
 require 'forwardable'
 require 'securerandom'
 
-module Queuecumber
+module Qcuke
   # Wouldn't it be great to have autload_relative symmetrical with
   # require_relative?
   adapter_loadpath = File.expand_path("adapters", File.dirname(__FILE__))
@@ -31,7 +31,7 @@ module Queuecumber
     end
 
     def prefix
-      @prefix ||= options[:prefix] || "QUEUECUMBER"
+      @prefix ||= options[:prefix] || "QCUKE"
     end
 
     def name
@@ -39,7 +39,7 @@ module Queuecumber
     end
     
     def enabled?
-      !!(options[:enable] || YAML::load(env['QUEUECUMBER'] || ""))
+      !!(options[:enable] || YAML::load(env['QCUKE'] || ""))
     end
 
     def setup!
@@ -66,7 +66,7 @@ module Queuecumber
     private
 
     def debug
-      if ENV['QUEUECUMBER_DEBUG']
+      if ENV['QCUKE_DEBUG']
         puts "Initialized FeatureQueue:"
         %w(prefix name).each do |attr|
           puts "#{attr}: #{self.send(attr)}"

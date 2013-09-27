@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'queuecumber/adapters/sqs'
+require 'qcuke/adapters/sqs'
 
-module Queuecumber  
+module Qcuke  
   describe SQSAdapter do
     let(:adapter) { SQSAdapter.new("name") }
     let(:sqs)     { double "sqs", as_null_object: true }

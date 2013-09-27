@@ -1,8 +1,8 @@
-require "queuecumber/version"
+require "qcuke/version"
 require "ruby_ext/hash"
-require "queuecumber/feature_queue"
+require "qcuke/feature_queue"
 
-module Queuecumber
+module Qcuke
   extend self
   
   def init(options = {})    
@@ -22,6 +22,6 @@ module Queuecumber
   private
   
   def load_monkey_patches
-    require_relative './queuecumber/cucumber_ext/ast/features'
+    require_relative './qcuke/cucumber_ext/ast/features'
   end
 end

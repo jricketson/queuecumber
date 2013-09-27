@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'queuecumber/adapters/sqs'
+require 'qcuke/adapters/sqs'
 
-module Queuecumber
+module Qcuke
   class TestAdapter
     attr_accessor :data
 
@@ -84,8 +84,8 @@ module Queuecumber
       end
 
       context "when options[:prefix] is not present" do
-        it "defaults to 'QUEUECUMBER'" do
-          expect(fq.prefix).to eq "QUEUECUMBER"
+        it "defaults to 'QCUKE'" do
+          expect(fq.prefix).to eq "QCUKE"
         end
       end
     end
@@ -130,15 +130,15 @@ module Queuecumber
         end
         
         [nil, '', false, "false"].each do |v|
-          it "returns false if env['QUEUECUMBER'] is \"#{v}\"" do
-            fq.env['QUEUECUMBER'] = v
+          it "returns false if env['QCUKE'] is \"#{v}\"" do
+            fq.env['QCUKE'] = v
             expect(fq).not_to be_enabled
           end
         end
 
         ['on', "true", "1"].each do |v|
-          it "returns true if env['QUEUECUMBER'] is \"#{v}\"" do
-            fq.env['QUEUECUMBER'] = v
+          it "returns true if env['QCUKE'] is \"#{v}\"" do
+            fq.env['QCUKE'] = v
             expect(fq).to be_enabled
           end
         end

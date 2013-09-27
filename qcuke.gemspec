@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'queuecumber/version'
+require 'qcuke/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "queuecumber"
-  spec.version       = Queuecumber::VERSION
+  spec.name          = "qcuke"
+  spec.version       = Qcuke::VERSION
   spec.authors       = ["dave@kapoq.com"]
   spec.email         = ["dave@kapoq.com"]
   spec.description   = %q{Quicker cucumber runs}
-  spec.summary       = %q{Queuecumber lets you distribute your cucumber test build step over
+  spec.summary       = %q{Qcuke lets you distribute your cucumber test build step over
 many servers/nodes/machines so you can run them in parallel.}
   spec.homepage      = "http://engineering.lonelyplanet.com"
   spec.license       = "MIT"

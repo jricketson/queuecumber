@@ -1,6 +1,6 @@
-require 'queuecumber'
+require 'qcuke'
 
-module Queuecumber
+module Qcuke
   class TestQueue < Array
     def poll(*args, &blk); each(&blk); end
   end
