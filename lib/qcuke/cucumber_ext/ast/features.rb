@@ -6,11 +6,11 @@ module Cucumber
       def self.feature_queue=(fq)
         @feature_queue = fq
       end
-      
+
       def self.feature_queue
         @feature_queue ||= Qcuke.instance
       end
-      
+
       def count
         @features.count
       end
@@ -18,17 +18,15 @@ module Cucumber
       def feature_queue
         self.class.feature_queue
       end
-      
+
       #
       # Monkey-patch to iterate over features pulled from the feature queue
       #
       def each(&proc)
-        feature_queue.each do |feature_index|
-          # If there is no matching feature, presumably it has been
-          # filtered out by cucumber tags
-          if feature = @features[feature_index]
-            yield feature
-          end
+        feature_queue.each do |feature_string|
+          feature = FeatureFile.new(feature_string).parse(nil, {})
+          puts "\nRunning '#{feature.title}'"
+          yield feature
         end
       end
     end

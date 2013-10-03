@@ -1,22 +1,23 @@
 require 'forwardable'
 require 'securerandom'
+require 'cucumber'
 
 module Qcuke
   # Wouldn't it be great to have autload_relative symmetrical with
   # require_relative?
   adapter_loadpath = File.expand_path("adapters", File.dirname(__FILE__))
   $LOAD_PATH.unshift(adapter_loadpath) unless $LOAD_PATH.include?(adapter_loadpath)
-  
+
   autoload :SQSAdapter, File.join(adapter_loadpath, "sqs")
 
   class FeatureQueue
     extend Forwardable
-    
+
     attr_reader :options
     attr_writer :env, :adapter, :name
 
     def_delegators :adapter, :empty!, :populate!, :delete!, :each
-    
+
     def initialize(options = {})
       @options = options
     end
@@ -36,7 +37,7 @@ module Qcuke
     def name
       @name ||= options[:name] || "#{prefix}_#{SecureRandom.uuid}"
     end
-    
+
     def enabled?
       !!(options[:enable] || YAML::load(env['QCUKE'] || ""))
     end
@@ -45,24 +46,26 @@ module Qcuke
       puts "emptying queue '#{name}'"
       empty!
       puts "populating queue '#{name}'"
-      populate!(feature_file_indices)
+      populate!(scenarios)
       puts "finished populating queue '#{name}'"
+    end
+
+    def scenarios
+      Dir["#{feature_file_dir}/**/*.feature"].collect { |feature_path|
+        Cucumber::FeatureFile.new(feature_path).parse([], {}).feature_elements.collect { |element|
+          element.location.to_s
+        }
+      }.flatten
     end
 
     def cleanup!(target_prefix = nil)
       target_prefix ||= prefix
       adapter.cleanup!(target_prefix)
     end
-    
+
     # TODO: inject Cucumber runtime/configuration object
     def feature_file_dir
       @feature_file_dir ||= options[:feature_file_dir] || (Module.const_defined?(:Rails) && Rails.root || FileUtils.pwd)
-    end
-
-    # TODO: inject Cucumber runtime/configuration object
-    def feature_file_indices
-      total_number_of_features = Dir["#{feature_file_dir}/**/*.feature"].count
-      feature_file_indices     = (0..total_number_of_features - 1).to_a.shuffle
     end
 
     private
