@@ -4,7 +4,7 @@ module Qcuke
   class SQSAdapter
     attr_reader   :name
     attr_accessor :options
-    
+
     def initialize(name, options = {})
       @name    = name
       @options = options || {}
@@ -14,7 +14,7 @@ module Qcuke
       sqs_options = options.except(:max_batch_size, :idle_timeout, :wait_time_seconds)
       @sqs ||= AWS::SQS.new(sqs_options)
     end
-    
+
     def max_batch_size
       @max_batch_size ||= options[:max_batch_size] || 10
     end
@@ -38,7 +38,7 @@ module Qcuke
         q.delete rescue AWS::SQS::Errors::NonExistentQueue
       end
     end
-    
+
     def create!
       sqs.queues.create(name, visibility_timeout: 36000).tap do |q|
         debug "- Created queue '#{q.url}'"
@@ -56,8 +56,9 @@ module Qcuke
     end
 
     def populate!(data)
+      puts "populating #{data} into queue."
       debug "- Populating queue with #{data.count} messages"
-      data.each_slice(max_batch_size) do |batch|        
+      data.each_slice(max_batch_size) do |batch|
         queue.batch_send(batch.map(&:to_s))
       end
     end
@@ -71,9 +72,9 @@ module Qcuke
 
     def each(&proc)
       queue.poll(initial_timeout: 240, idle_timeout: idle_timeout, wait_time_seconds: wait_time_seconds) do |msg|
-        index = msg.body.to_i
+        index = msg.body
         yield index
-      end      
+      end
     end
 
     private

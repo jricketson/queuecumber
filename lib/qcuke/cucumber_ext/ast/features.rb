@@ -24,7 +24,8 @@ module Cucumber
       #
       def each(&proc)
         feature_queue.each do |feature_string|
-          feature = FeatureFile.new(feature_string).parse(nil, {})
+          puts "getting #{feature_string} from queue"
+          feature = FeatureFile.new(feature_string).parse([], {})
           puts "\nRunning '#{feature.title}'"
           yield feature
         end
