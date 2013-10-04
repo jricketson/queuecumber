@@ -64,6 +64,7 @@ module Qcuke
     end
 
     # Pull all messages off the queue and discard them
+    #TODO: this should be faster. At the moment it makes one request per item to discard it.
     def empty!
       queue.poll(idle_timeout: 1, wait_time_seconds: wait_time_seconds) do |_|
         #throw it away

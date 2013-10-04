@@ -45,8 +45,12 @@ module Qcuke
     def setup!
       puts "emptying queue '#{name}'"
       empty!
+      puts "calculating scenarios #{Time.now - t}"
+      data = scenarios
+      puts "scenarios #{Time.now - t}"
+
       puts "populating queue '#{name}'"
-      populate!(scenarios)
+      populate!(data)
       puts "finished populating queue '#{name}'"
     end
 
@@ -65,7 +69,10 @@ module Qcuke
 
     # TODO: inject Cucumber runtime/configuration object
     def feature_file_dir
-      @feature_file_dir ||= options[:feature_file_dir] || (Module.const_defined?(:Rails) && Rails.root || FileUtils.pwd)
+      @feature_file_dir ||=
+        options[:feature_file_dir] ||
+        ENV['QCUKE_FEATURE_FILE_DIR'] ||
+        (Module.const_defined?(:Rails) && Rails.root || FileUtils.pwd)
     end
 
     private
