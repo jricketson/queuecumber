@@ -2,7 +2,7 @@ unless ARGV.any? {|a| a =~ /^gems/} # Don't load anything when running the gems:
   require 'qcuke'
 
   def init(*args); Qcuke.init(*args); end
-  
+
   namespace :qcuke do
     desc "Delete all queues with given prefix (defaults to 'QCUKE')"
     task :cleanup, [:prefix] do |_, options|
@@ -10,7 +10,7 @@ unless ARGV.any? {|a| a =~ /^gems/} # Don't load anything when running the gems:
     end
 
     desc "Find-or-create named cucumber queue, empty it, populate it"
-    task :setup, [:name] do |_, options|
+    task :setup, [:name, :feature_file_dir] do |_, options|
       init(options).setup!
     end
 
@@ -18,7 +18,7 @@ unless ARGV.any? {|a| a =~ /^gems/} # Don't load anything when running the gems:
     task :parallel, [:count, :pattern, :options] do |t, args|
       require 'parallel_tests'
       require 'parallel_tests/qcuke/runner'
-      
+
       count, pattern, options = ParallelTests::Tasks.parse_args(args)
       cli = ParallelTests::CLI.new.run([
                                         "--type", "test",
