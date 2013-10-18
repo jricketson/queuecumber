@@ -64,7 +64,6 @@ module Qcuke
     end
 
     def scenarios
-      debugger
       tag_arguments = tags.map {|tag| "--tag #{tag}"}.join(' ')
       json = `bundle exec cucumber -d -f json -p #{profile} #{tag_arguments} #{feature_file_dir}`
       features = JSON.parse(json)
