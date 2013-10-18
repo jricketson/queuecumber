@@ -43,7 +43,8 @@ module Qcuke
     end
 
     def setup!
-      puts "emptying queue '#{name}'"
+      t = Time.now
+      puts "emptying queue '#{name}' #{t}"
       empty!
       puts "calculating scenarios #{Time.now - t}"
       data = scenarios
