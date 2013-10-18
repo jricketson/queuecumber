@@ -20,8 +20,9 @@ module Qcuke
   end
 
   private
-  
+
   def load_monkey_patches
+    puts 'QCuke enabled'
     require_relative './qcuke/cucumber_ext/ast/features'
   end
 end

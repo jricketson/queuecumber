@@ -19,7 +19,6 @@ module Qcuke
     
     def initialize(options = {})
       @options = options
-      debug
     end
 
     def env
@@ -43,8 +42,11 @@ module Qcuke
     end
 
     def setup!
+      puts "emptying queue '#{name}'"
       empty!
+      puts "populating queue '#{name}'"
       populate!(feature_file_indices)
+      puts "finished populating queue '#{name}'"
     end
 
     def cleanup!(target_prefix = nil)

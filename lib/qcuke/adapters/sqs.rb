@@ -40,7 +40,7 @@ module Qcuke
     end
     
     def create!
-      sqs.queues.create(name).tap do |q|
+      sqs.queues.create(name, visibility_timeout: 36000).tap do |q|
         debug "- Created queue '#{q.url}'"
       end
     end
@@ -64,11 +64,13 @@ module Qcuke
 
     # Pull all messages off the queue and discard them
     def empty!
-      each { |_| }
+      queue.poll(idle_timeout: 1, wait_time_seconds: wait_time_seconds) do |_|
+        #throw it away
+      end
     end
 
     def each(&proc)
-      queue.poll(idle_timeout: idle_timeout, wait_time_seconds: wait_time_seconds) do |msg|
+      queue.poll(initial_timeout: 240, idle_timeout: idle_timeout, wait_time_seconds: wait_time_seconds) do |msg|
         index = msg.body.to_i
         yield index
       end      

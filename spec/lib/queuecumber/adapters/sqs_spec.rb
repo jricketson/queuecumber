@@ -113,7 +113,7 @@ module Qcuke
       
       it "uses the SQS api to create the named queue" do
         sqs.should_receive(:queues).and_return(queues)
-        queues.should_receive(:create).with("name").and_return(queue)
+        queues.should_receive(:create).with("name", visibility_timeout: 36000).and_return(queue)
         expect(adapter.create!).to eq queue
       end
     end
