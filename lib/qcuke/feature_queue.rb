@@ -38,6 +38,14 @@ module Qcuke
       @name ||= options[:name] || "#{prefix}_#{SecureRandom.uuid}"
     end
 
+    def profile
+      @profile ||= options[:profile] || 'default'
+    end
+
+    def tags
+      @tags ||= (options[:tags] || '').split('&') || []
+    end
+
     def enabled?
       !!(options[:enable] || YAML::load(env['QCUKE'] || ""))
     end
@@ -56,11 +64,20 @@ module Qcuke
     end
 
     def scenarios
-      Dir["#{feature_file_dir}/**/*.feature"].collect { |feature_path|
-        Cucumber::FeatureFile.new(feature_path).parse([], {}).feature_elements.collect { |element|
-          element.location.to_s
-        }
-      }.flatten
+      debugger
+      tag_arguments = tags.map {|tag| "--tag #{tag}"}.join(' ')
+      json = `bundle exec cucumber -d -f json -p #{profile} #{tag_arguments} #{feature_file_dir}`
+      features = JSON.parse(json)
+      features.map do |feature|
+        feature['elements'].map do |element|
+          next unless ['Scenario', 'Scenario Outline'].include? element['keyword']
+          "#{strip_pwd(feature['uri'])}:#{element['line']}"
+        end
+      end.flatten.compact
+   end
+
+    def strip_pwd(path)
+      path.start_with?(pwd) ? path[pwd.length+1..-1] : path
     end
 
     def cleanup!(target_prefix = nil)

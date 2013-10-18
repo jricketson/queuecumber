@@ -10,7 +10,7 @@ unless ARGV.any? {|a| a =~ /^gems/} # Don't load anything when running the gems:
     end
 
     desc "Find-or-create named cucumber queue, empty it, populate it"
-    task :setup, [:name, :feature_file_dir] do |_, options|
+    task :setup, [:name, :feature_file_dir, :profile, :tags] do |_, options|
       init(options).setup!
     end
 
