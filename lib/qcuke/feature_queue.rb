@@ -70,9 +70,10 @@ module Qcuke
       features.map do |feature|
         feature['elements'].map do |element|
           next unless ['Scenario', 'Scenario Outline'].include? element['keyword']
-          "#{strip_pwd(feature['uri'])}:#{element['line']}"
+          num_steps = element['steps'].count
+          { name: "#{strip_pwd(feature['uri'])}:#{element['line']}", num_steps: num_steps }
         end
-      end.flatten.compact
+      end.flatten.compact.sort_by {|s| -s[:num_steps]}.map{|s| s[:name]}
    end
 
     def strip_pwd(path)
